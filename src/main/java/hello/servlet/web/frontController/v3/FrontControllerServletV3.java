@@ -31,21 +31,20 @@ public class FrontControllerServletV3 extends HttpServlet {
 
         String requestURI = request.getRequestURI();
 
-        ControllerV3 controller = controllerMap.get(requestURI);
+        ControllerV3 controller = controllerMap.get(requestURI); // url 찾아서 해당 컨트롤러 반환
 
         if (controller == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
-
         // paramMap
-        Map<String, String> paramMap = createParamMap(request);
-        ModelView mv = controller.process(paramMap);
+        Map<String, String> paramMap = createParamMap(request);// 파라미터 -> Map으로 분리
+        ModelView mv = controller.process(paramMap); // 인터페이스 다형성 ModelView(페이지명, 파라미터맵)
 
         String viewName = mv.getViewName();// 논리 이름
-        MyView view = viewResolver(viewName);
-        view.render(mv.getModel(), request, response);
+        MyView view = viewResolver(viewName);// view 페이지 경로
+        view.render(mv.getModel(), request, response); // map, req, res -> forward
     }
 
     private MyView viewResolver(String viewName) {
